@@ -10,18 +10,28 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
 
+      - name: Show project files
+        run: |
+          echo "=== ROOT ==="
+          ls -la
+          echo "=== PACKAGE ==="
+          cat package.json
+
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
       - name: Install EAS CLI
         run: npm install --global eas-cli
+
+      - name: Check Expo project
+        run: npx expo-doctor
 
       - name: Build Android APK
         run: eas build --platform android --profile preview --non-interactive --no-wait

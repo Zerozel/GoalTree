@@ -1,42 +1,14 @@
-name: Build GoalTree APK
+name: Build
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  build:
-    name: Build Android APK
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-
-      - name: Repair Expo dependencies
-        run: |
-          npx expo@54.0.37 install --fix
-          npx expo@54.0.37 install react-native-worklets
-
-      - name: Install dependencies
-        run: npm install --no-audit --no-fund
-
-      - name: Verify Expo project
-        run: npx expo-doctor
-
-      - name: Install EAS CLI
-        run: npm install --global eas-cli
-
-      - name: Initialize EAS project
-        run: eas init --force --non-interactive
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Build Android APK
-        run: eas build --platform android --profile preview --non-interactive --no-wait
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+  build_android:
+    name: Build Android App
+    type: build
+    params:
+      platform: android
+  
